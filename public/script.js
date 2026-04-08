@@ -19,9 +19,31 @@ document.getElementById('btn-submit').onclick = () => {
   document.getElementById('game-ui').classList.remove('hidden');
 };
 
-document.getElementById('btn-tap').onclick = () => {
+// 🔑 Защита от зума при двойном тапе (глобально)
+document.addEventListener('touchstart', (e) => {
+  if (e.touches.length > 1) e.preventDefault();
+}, { passive: false });
+
+// 🔑 Мгновенная обработка тапов без задержки 300мс
+const tapBtn = document.getElementById('btn-tap');
+
+tapBtn.addEventListener('touchstart', (e) => {
+  e.preventDefault(); // Блокирует зум/скролл Safari
   socket.emit('tap');
-};
+  tapBtn.classList.add('pressed');
+}, { passive: false });
+
+tapBtn.addEventListener('touchend', (e) => {
+  e.preventDefault();
+  tapBtn.classList.remove('pressed');
+}, { passive: false });
+
+// Фоллбэк для ПК/планшетов с мышью
+tapBtn.addEventListener('pointerdown', (e) => {
+  if (e.pointerType === 'mouse') {
+    socket.emit('tap');
+  }
+});
 
 socket.on('connect', () => myId = socket.id);
 socket.on('state', updateUI);
@@ -36,12 +58,12 @@ function updateUI(s) {
   if (p1) {
     document.getElementById('name-1').textContent = p1[1].name;
     document.getElementById('wins-1').textContent = `🏆${p1[1].wins || 0}`;
-    document.getElementById('ball-1').style.left = `${(p1[1].pos / 150) * 85 + 8}%`;
+    document.getElementById('ball-1').style.left = `${Math.min((p1[1].pos / 150) * 85 + 10, 95)}%`;
   }
   if (p2) {
     document.getElementById('name-2').textContent = p2[1].name;
     document.getElementById('wins-2').textContent = `🏆${p2[1].wins || 0}`;
-    document.getElementById('ball-2').style.left = `${(p2[1].pos / 150) * 85 + 8}%`;
+    document.getElementById('ball-2').style.left = `${Math.min((p2[1].pos / 150) * 85 + 10, 95)}%`;
   }
 
   const amSpectator = myId && s.players[myId]?.spectator;
@@ -66,7 +88,7 @@ function updateUI(s) {
     status.textContent = 'Матч окончен!';
     tapBtn.classList.add('hidden');
     result.classList.remove('hidden');
-    const winner = players.reduce((a, b) => a[1].wins > b[1].wins ? a : b);
+    const winner = players.reduce((a, b) => (a[1].wins || 0) > (b[1].wins || 0) ? a : b);
     result.textContent = `🏆 Чемпион: ${winner[1].name}`;
   }
 }
