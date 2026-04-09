@@ -2,50 +2,57 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <!-- Жёсткий запрет зума + поддержка безопасных зон iPhone -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Ball Race</title>
+  <title>🏁 Ball Race</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="menu">
-    <h1>🏁 Гонка шариков</h1>
-    <button id="btn-play">🎮 Играть</button>
-    <button id="btn-watch">👁 Смотреть</button>
-  </div>
-
-  <div id="name-input" class="hidden">
-    <input type="text" id="player-name" placeholder="Ваше имя" maxlength="12" autocomplete="off">
-    <button id="btn-submit">Войти</button>
-  </div>
-
-  <div id="game-ui" class="hidden">
-    <div id="status-bar">
-      <span id="round-info">Раунд: 1/3</span>
-      <span id="timer">60</span>
-      <span id="match-status">Ожидание...</span>
-    </div>
-    
-    <div id="tracks">
-      <div class="track">
-        <div class="ball" id="ball-1"></div>
-        <div class="player-info">
-          <span id="name-1">Игрок 1</span>
-          <span id="wins-1">0</span>
-        </div>
-      </div>
-      <div class="track">
-        <div class="ball" id="ball-2"></div>
-        <div class="player-info">
-          <span id="name-2">Игрок 2</span>
-          <span id="wins-2">0</span>
-        </div>
-      </div>
+  <div id="app">
+    <!-- Меню -->
+    <div id="menu" class="card">
+      <h1>🏁 Ball Race</h1>
+      <p class="subtitle">Тапай быстрее соперника!</p>
+      <button id="btn-play">🎮 Играть</button>
+      <button id="btn-watch">👁 Смотреть</button>
     </div>
 
-    <!-- Гигантская кнопка для тапов -->
-    <button id="btn-tap" class="hidden">ТАПАЙ!</button>
-    <div id="result" class="hidden"></div>
+    <!-- Ввод имени -->
+    <div id="name-input" class="card hidden">
+      <h2>Введите имя</h2>
+      <input type="text" id="player-name" placeholder="Ваш ник" maxlength="12" autocomplete="off">
+      <button id="btn-submit">Поехали 🚀</button>
+    </div>
+
+    <!-- Игровой интерфейс -->
+    <div id="game-ui" class="hidden">
+      <div id="status-bar">
+        <span id="round-info">Раунд 1/3</span>
+        <span id="timer">60</span>
+        <span id="match-status">Ожидание...</span>
+      </div>
+
+      <div id="tracks">
+        <div class="track">
+          <div class="finish-line"></div>
+          <div class="ball" id="ball-1"></div>
+          <div class="track-info">
+            <span id="name-1">Игрок 1</span>
+            <span id="wins-1">0</span>
+          </div>
+        </div>
+        <div class="track">
+          <div class="finish-line"></div>
+          <div class="ball" id="ball-2"></div>
+          <div class="track-info">
+            <span id="name-2">Игрок 2</span>
+            <span id="wins-2">0</span>
+          </div>
+        </div>
+      </div>
+
+      <button id="btn-tap" class="hidden">TAP!</button>
+      <div id="result" class="card hidden"></div>
+    </div>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
